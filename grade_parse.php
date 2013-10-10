@@ -1,7 +1,4 @@
-<?php
-    
-require_once("phpQuery.php");
-    
+<?php    
 /*
  * Takes a HTML document in $html as an input and extracts overall class grades 
  * from it for all marking periods that have data available.
