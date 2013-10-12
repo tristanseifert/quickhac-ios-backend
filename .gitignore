@@ -1,3 +1,5 @@
 test/
 gradebook.html
 gradebook_class.html
+.DS_Store
+*/.DS_Store
