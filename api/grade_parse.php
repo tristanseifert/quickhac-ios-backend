@@ -1,4 +1,6 @@
 <?php
+	if(!defined("API_LOADED")) die("no direct access");
+
 	/*
 	 * Takes a HTML document in $html as an input and extracts overall class grades
 	 * from it for all marking periods that have data available.

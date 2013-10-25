@@ -3,3 +3,4 @@ gradebook.html
 gradebook_class.html
 .DS_Store
 */.DS_Store
+api/secret.php

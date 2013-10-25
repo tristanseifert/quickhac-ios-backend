@@ -1,15 +1,20 @@
 <?php
 	define("API_LOADED", 1);
 	require_once("grade_parse.php");
-	
+	require_once("secret.php"); // See README.md for info about this
+
+	// Send JSON content-type header
+	header("Content-Type: application/json");
+
 	// Get API method from URL (rewritten)
 	$args = explode('/', $_SERVER['DOCUMENT_URI']);  // DOCUMENT_URI = REDIRECT_URL on Apache
 	array_shift($args);
 	
-	$api_method = $args[0];
+	$api_method = $args[count($args)-1];
 	
 	// Database stuff
-	$conn, $db = null;
+	$conn = null;
+	$db = null;
 	
 	// Run the appropriate code for the API method
 	switch($api_method) {
@@ -18,7 +23,33 @@
 		 * database, and if not, attempts to register it with a username, password,
 		 * and student ID.
 		 */
-		case "register": {			
+		case "register": {
+			$deviceUUID = $_POST["uuid"];
+			$hacUser = $_POST["username"];
+			$hacPass = $_POST["password"];
+			$hacID = $_POST["sid"];
+			
+			connect_mongo();
+
+			$collection = $db->devices;
+			$cursor = $collection->find(array("uuid" => $deviceUUID));
+
+			if($cursor->count() > 0) {
+				$deviceInfo = $cursor->getNext();
+				die(json_encode(array("status" => 200, "message" => "Device already registered.", "id" => (string) $deviceInfo["_id"])));
+			} else {
+				$encrypted_pass = encrypt_password($hacPass);
+
+				$deviceArray = array();
+				$deviceArray["user"] = $hacUser;
+				$deviceArray["password"] = $encrypted_pass;
+				$deviceArray["uuid"] = $deviceUUID;
+				$deviceArray["sid"] = $hacID;
+
+				// Insert device array into database
+				$collection->insert($deviceArray);
+			}
+
 			break;
 		}
 		
