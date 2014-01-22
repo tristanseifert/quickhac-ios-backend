@@ -59,7 +59,7 @@ void* client_thread(void *data) {
 		SSL_write(client->connection->ssl_context, "ident\n", 7);
 		s = SSL_read(client->connection->ssl_context, ident, 32);
 
-		if(s > 0) { 
+		if(s > 0) {
 			if(s == 32) {
 				// we have valid ident now
 				SSL_write(client->connection->ssl_context, "ok\n", 3);
